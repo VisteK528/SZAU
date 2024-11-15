@@ -1,13 +1,23 @@
-function [t, h] = zbiornik(tspan, h1_0, h2_0, F1, FD)
+function [t, h] = nonlinear_tank_model(tspan, h1_0, h2_0, F1_val, FD_val)
     % F1 - funkcja przepływu zależna od czasu, np. @(t) 36.5
     % FD - funkcja przepływu dodatkowego zależna od czasu, np. @(t) 7.5
 
-    % Definiowanie stałej C1
-    C1 = 0.75; % przykładowa wartość, zmień ją zgodnie z zadaniem
+    % Definiowanie stałej C1 i C2 oraz tau
+    C1 = 0.75; 
     C2 = 0.55;
+    tau = 120;
     
     alfa1 = 13;
     alfa2 = 12;
+    
+    % Definiowanie funkcji sterowania i zakłócenia
+    % F1_in = @(t) F1_val;
+    % F1 = @(t) F1_in(t - tau);     
+    % FD = @(t) FD_val;
+    F1_in = @(t)F1_val;
+    tau = 120;
+    F1 = @(t) F1_in(t - tau);     % przykład funkcji dopływu zależnej od czasu
+    FD = @(t) 22;
 
     % Definiowanie funkcji odpływu
     F2 = @(h1) alfa1 * sqrt(h1);
@@ -22,17 +32,6 @@ function [t, h] = zbiornik(tspan, h1_0, h2_0, F1, FD)
     % Rozwiązywanie układu równań za pomocą ode15s
     [t, h] = ode15s(odefun, tspan, [h1_0, h2_0]);
 
-    % % Opcjonalny wykres wyników
-    % figure;
-    % plot(t, h(:, 1), 'b', 'DisplayName', 'h1(t)'); % wykres dla h1
-    % hold on;
-    % plot(t, h(:, 2), 'r', 'DisplayName', 'h2(t)'); % wykres dla h2
-    % xlabel('Czas t');
-    % ylabel('Wysokości h1(t) i h2(t)');
-    % title('Rozwiązanie układu równań różniczkowych dla h1(t) i h2(t)');
-    % legend;
-    % grid on;
-    % hold off;
 end
 
 

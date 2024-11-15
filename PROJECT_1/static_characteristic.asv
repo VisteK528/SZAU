@@ -1,0 +1,44 @@
+clear all;
+
+tspan = 1:10000;
+Upp = 73;
+Zpp = 15;
+
+U_jump_points = (Upp*0.5):(Upp*1.5);
+Z_jump_points = (Zpp*0.5):(Zpp*1.5);
+
+u = zeros(N, 1);
+y = zeros(N, 1);
+z = zeros(N, 1);
+
+
+u_jump_time = 10;
+y_steady = zeros(U_jump_points, Z_jump_points);
+
+i = 0; j =0;
+for u=U_jump_points
+
+
+    for z=Z_jump_points
+
+        
+     
+    
+        y_steady(i, j) = y(end);
+    end
+end
+
+% Create a mesh grid for u_jumps to plot y_steady in 3D
+[U1, U2] = meshgrid(u_jumps, u_jumps);
+
+% Create a 3D surface plot
+figure;
+surf(U1, U2, y_steady);
+xlabel('$u_1$', 'Interpreter', 'latex', 'fontsize', 14); % x-axis for u_jumps
+ylabel('$u_2$', 'Interpreter', 'latex', 'fontsize', 14); % y-axis for u_jumps
+zlabel('$y_{steady}$', 'Interpreter', 'latex', 'fontsize', 14); % z-axis for y_steady
+title('3D Surface Plot of Steady-State Output $y_{steady}$', 'Interpreter', 'latex');
+colorbar; % Add color bar to show the color scale
+grid on;
+
+
