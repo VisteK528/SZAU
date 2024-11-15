@@ -8,7 +8,7 @@ h1_0 = 45.8225;
 h2_0 = 53.7778;
 D = 150; N = 70; Nu = 40; lambda = 10; Ts = 10; t_span = 1:Ts;
 u_set_time = 30;
-u_set_value = 1.1*Upp;
+u_set_value = 0.6*Upp;
 
 h1(1:start-1) = h1_0;
 h1(start:kend) = 0;
