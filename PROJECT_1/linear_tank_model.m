@@ -1,4 +1,4 @@
-function [t, h] = linear_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_values)
+function [t, h] = linear_tank_model(tspan, h1_0, h2_0, h2_lin, Tp, F1in_values, FD_values)
     % F1 - funkcja przepływu zależna od czasu, np. @(t) 36.5
     % FD - funkcja przepływu dodatkowego zależna od czasu, np. @(t) 7.5
 
@@ -14,17 +14,16 @@ function [t, h] = linear_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_value
     FDpp = 15;
     tau = 120;
 
-    h1_pp = 45.8225;            
-    h2_pp = 53.7778;
+    h1_lin = h2_lin * (alfa2 / alfa1)^2;
 
     % Definiowanie funkcji sterowania i zakłócenia
-    F1_in = @(t) F1pp * (t <= 0) + F1in_values(max(1, floor(t / Tp)+1)) * (t > 0);
+    F1_in = @(t) F1pp * (t <= 0) + F1in_values(max(1, floor(t / Tp))) * (t > 0);
     F1 = @(t) F1_in(t - tau);    
-    FD = @(t) FDpp * (t <= 0) + FD_values(max(1, ceil(t / Tp))) * (t > 0);
+    FD = @(t) FDpp * (t <= 0) + FD_values(max(1, floor(t / Tp))) * (t > 0);
 
     % Definiowanie funkcji odpływu
-    F2 = @(h1) alfa1 * (sqrt(h1_pp) + (1/(2*sqrt(h1_pp))*(h1-h1_pp)));
-    F3 = @(h2) alfa2 * (sqrt(h2_pp) + (1/(2*sqrt(h2_pp))*(h2-h2_pp)));
+    F2 = @(h1) alfa1 * (sqrt(h1_lin) + (1/(2*sqrt(h1_lin))*(h1-h1_lin)));
+    F3 = @(h2) alfa2 * (sqrt(h2_lin) + (1/(2*sqrt(h2_lin))*(h2-h2_lin)));
 
     % Definiowanie równania różniczkowego jako funkcji anonimowej
     odefun = @(t, y) [
@@ -33,6 +32,7 @@ function [t, h] = linear_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_value
     ];
 
     % Rozwiązywanie układu równań za pomocą ode15s
+    % options = odeset('RelTol', 1e-3, 'AbsTol', 1e-6);
     [t, h] = ode15s(odefun, tspan, [h1_0, h2_0]);
 
 end

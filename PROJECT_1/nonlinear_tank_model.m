@@ -15,9 +15,9 @@ function [t, h] = nonlinear_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_va
     tau = 120;
 
     % Definiowanie funkcji sterowania i zakłócenia
-    F1_in = @(t) F1pp * (t <= 0) + F1in_values(max(1, floor(t / Tp)+1)) * (t > 0);
+    F1_in = @(t) F1pp * (t <= 0) + F1in_values(max(1, floor(t / Tp))) * (t > 0);
     F1 = @(t) F1_in(t - tau);    
-    FD = @(t) FDpp * (t <= 0) + FD_values(max(1, ceil(t / Tp))) * (t > 0);
+    FD = @(t) FDpp * (t <= 0) + FD_values(max(1, floor(t / Tp))) * (t > 0);
 
     % Definiowanie funkcji odpływu
     F2 = @(h1) alfa1 * sqrt(h1);
