@@ -8,14 +8,16 @@ h1_0 = 45.8225;
 h2_0 = 53.7778;
 D = 150; N = 70; Nu = 40; lambda = 10; Ts = 10; t_span = 1:Ts;
 u_set_time = 30;
-u_set_value = 0.5*Upp;
+u_set_value = 0.6*Upp;
 
 h1(1:start-1) = h1_0;
 h1(start:kend) = 0;
 h2(1:start-1) = h2_0;
 h2(start:kend) = 0;
 
-s = get_s(D*Ts, Ts);
+[mf_h1, mf_h2] = generate_gaussian_mf_functions(5);
+
+s = get_s_fuzzy(D*Ts, Ts, mf_h1, mf_h2);
 
 
 % Fill M matrix
@@ -58,7 +60,7 @@ for k=start:kend
     % Generate process output
     t_span = ((k-1)*Ts):(k*Ts);
     % [~, h] = nonlinear_tank_model(t_span, h1_0, h2_0, Ts, u, z_signal);
-    [~, h] = linear_tank_model(t_span, h1_0, h2_0, h2_0, Ts, u, z_signal);
+    [~, h] = fuzzy_tank_model(t_span, h1_0, h2_0, Ts, u, z_signal, mf_h1, mf_h2);
 
     h1(k) = h(end,1); 
     h2(k) = h(end,2);

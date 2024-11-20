@@ -22,7 +22,7 @@ for u=U_jump_points
     for z=Z_jump_points
         u_signal = ones(floor(length(tspan)/Tp), 1) * u;
         z_signal = ones(floor(length(tspan)/Tp), 1) * z;
-        [t, y] = linear_tank_model(tspan, h1_0, h2_0, Tp, u_signal, z_signal);
+        [t, y] = linear_tank_model(tspan, h1_0, h2_0, h2_0, Tp, u_signal, z_signal);
         y_steady(i, j) = y(end);
         fprintf("i: %d\tj: %d\n\n", i, j);
         j = j + 1;

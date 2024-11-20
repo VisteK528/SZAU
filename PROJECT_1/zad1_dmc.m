@@ -1,5 +1,5 @@
 %Zadanie 1 - DMC
-D = 50; N = 150; Nu = 150; lambda = 1; Ts = 10; t_span = 1:Ts;
+D = 150; N = 70; Nu = 40; lambda = 10; Ts = 10; t_span = 1:Ts;
 
 t_step  = 2000;
 Ts = 10;
@@ -8,7 +8,8 @@ s = get_s(t_step, Ts);
 tau = 120;
 FD = @(t) 15;
 
-kk = 300; ks = 60;
+ks = D+10;
+kk = ks+300; 
 Upp = 73;
 h1_0 = 45.8225;            
 h2_0 = 53.7778;
@@ -16,7 +17,7 @@ z = 15;
 
 [M, Mp, K, ke, Ku] = offline_DMC(s, D, N, Nu, lambda);
 
-h_zad(1:ks-1) = h2_0; h_zad(ks:kk) = 1.1*Upp; 
+h_zad(1:ks-1) = h2_0; h_zad(ks:kk) = 0.8*h2_0; 
 
 h1(1:ks-1) = h1_0;
 h1(ks:kk) = 0;
