@@ -22,7 +22,7 @@ function [t, h] = fuzzy_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_values
         h = h + weights_normalized(i) * h_new;
     end
     
-    % h(h<0) = 0;
+    h(h<0) = 0;
 
 end
 
