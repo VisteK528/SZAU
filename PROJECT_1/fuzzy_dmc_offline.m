@@ -1,0 +1,1 @@
+function [Ke, Ku] = fuzzy_dmc_offline()
