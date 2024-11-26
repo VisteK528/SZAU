@@ -27,13 +27,14 @@ function [t, h] = linear_tank_model(tspan, h1_0, h2_0, h2_lin, Tp, F1in_values, 
 
     % Definiowanie równania różniczkowego jako funkcji anonimowej
     odefun = @(t, y) [
-        (F1(t) + FD(t) - F2(y(1))) / (2 * C1 * y(1));    % równanie dla dh1/dt
-        (F2(y(1)) - F3(y(2))) / (2 * C2 * y(2))          % równanie dla dh2/dt
+        (F1(t) + FD(t) - F2(max(y(1), 0))) / (2 * C1 * max(y(1), 1e-6));    % równanie dla dh1/dt
+        (F2(max(y(1), 0)) - F3(max(y(2), 0))) / (2 * C2 * max(y(2), 1e-6))          % równanie dla dh2/dt
     ];
 
     % Rozwiązywanie układu równań za pomocą ode15s
     % options = odeset('RelTol', 1e-3, 'AbsTol', 1e-6);
     [t, h] = ode15s(odefun, tspan, [h1_0, h2_0]);
+    disp(min(h));
 
 end
 

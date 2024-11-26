@@ -6,7 +6,7 @@ h2_0_nonlinear = 53.7778;
 
 h1_0_linear = 45.8225;            
 h2_0_linear = 53.7778; 
-h2_lin = h2_0_linear;
+h2_lin = 100;
 
 h1_0_fuzzy = 45.8225;            
 h2_0_fuzzy = 53.7778;
