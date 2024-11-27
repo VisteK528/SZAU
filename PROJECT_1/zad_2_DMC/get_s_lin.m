@@ -19,7 +19,7 @@ function S = get_s_lin(t_step, Ts, h2_0_lin, Upp)
 
 
 
-    [~, h] = linear_tank_model_v2(t_span, h1_0_lin, h2_0_lin, h2_0_lin, Ts, u_signal, z_signal);
+    [~, h] = linear_tank_model(t_span, h1_0_lin, h2_0_lin, h2_0_lin, Ts, u_signal, z_signal);
     delta_u = u_signal(1) - Upp;
 
     S = (h(1:Ts:end,2) - h2_0_lin)./delta_u;

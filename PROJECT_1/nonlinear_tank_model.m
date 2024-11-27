@@ -24,13 +24,23 @@ function [t, h] = nonlinear_tank_model(tspan, h1_0, h2_0, Tp, F1in_values, FD_va
     F3 = @(h2) alfa2 * sqrt(h2);
 
     % Definiowanie równania różniczkowego jako funkcji anonimowej
+
+    % odefun = @(t, y) [
+    %     (F1(t) + FD(t) - F2(y(1))) / (2 * C1 * y(1));    % równanie dla dh1/dt
+    %     (F2(y(1)) - F3(y(2))) / (2 * C2 * y(2))          % równanie dla dh2/dt
+    % ];
+
     odefun = @(t, y) [
-        (F1(t) + FD(t) - F2(y(1))) / (2 * C1 * y(1));    % równanie dla dh1/dt
-        (F2(y(1)) - F3(y(2))) / (2 * C2 * y(2))          % równanie dla dh2/dt
+        (F1(t) + FD(t) - F2(max(y(1), 0))) / (2 * C1 * max(y(1), 0.1));    % równanie dla dh1/dt
+        (F2(max(y(1), 0)) - F3(max(y(2), 0))) / (2 * C2 * max(y(2), 0.1))          % równanie dla dh2/dt
     ];
 
     % Rozwiązywanie układu równań za pomocą ode15s
-    [t, h] = ode15s(odefun, tspan, [h1_0, h2_0]);
+    % [t, h] = ode15s(odefun, tspan, [h1_0, h2_0]);
+
+    options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8, 'NonNegative', 1:2); % Indeksy odpowiadają stanom y(1) i y(2)
+    [t, h] = ode15s(odefun, tspan, [h1_0, h2_0], options);
+
 
 end
 
