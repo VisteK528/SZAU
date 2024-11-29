@@ -1,0 +1,39 @@
+clear all;
+addpath("../");
+addpath("../zad_2_DMC/");
+
+Ts = 10;
+h2pp_vect = [35 60 85];
+model_count = length(h2pp_vect);
+Upp_vect = zeros(model_count, 1);
+
+S = cell(model_count, 1);
+S2 = cell(model_count, 1);
+
+for i = 1:model_count
+    Upp_vect(i)  = calculate_Upp(h2pp_vect(i),15);
+    S{i} = get_s_lin(1500, Ts, h2pp_vect(i), Upp_vect(i));
+    S2{i} = get_s(1500, Ts, h2pp_vect(i), Upp_vect(i));
+end
+
+s1 = S{1};
+s2 = S{2};
+s3 = S{3};
+
+s21 = s2{1};
+s22 = s2{2};
+s23 = s2{3};
+
+
+figure;
+plot(s1);
+hold on;
+plot(s2);
+hold on;
+plot(s3);
+hold on;
+plot(s21);
+hold on;
+plot(s22);
+hold on;
+plot(s23);

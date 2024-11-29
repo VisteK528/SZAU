@@ -22,7 +22,7 @@ for u=U_jump_points
     for z=Z_jump_points
         u_signal = ones(floor(length(tspan)/Tp), 1) * u;
         z_signal = ones(floor(length(tspan)/Tp), 1) * z;
-        [t, y] = linear_tank_model(tspan, h1_0, h2_0, h2_0, Tp, u_signal, z_signal);
+        [t, y] = nonlinear_tank_model(tspan, h1_0, h2_0, Tp, u_signal, z_signal);
         y_steady(i, j) = y(end);
         fprintf("i: %d\tj: %d\n\n", i, j);
         j = j + 1;
@@ -38,9 +38,11 @@ figure;
 surf(U1, U2, y_steady);
 xlabel('$u$', 'Interpreter', 'latex', 'fontsize', 14); % x-axis for u_jumps
 ylabel('$z$', 'Interpreter', 'latex', 'fontsize', 14); % y-axis for u_jumps
-zlabel('$y_{steady}$', 'Interpreter', 'latex', 'fontsize', 14); % z-axis for y_steady
-title('3D Surface Plot of Steady-State Output $y_{steady}$', 'Interpreter', 'latex');
-colorbar; % Add color bar to show the color scale
+zlabel('$y$', 'Interpreter', 'latex', 'fontsize', 14); % z-axis for y_steady
+colorbar;
 grid on;
+
+name = "images/zad1_nonlinear_3d_static.png";
+exportgraphics(gcf, name, "Resolution", 400);
 
 
