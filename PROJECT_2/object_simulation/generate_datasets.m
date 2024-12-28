@@ -1,29 +1,101 @@
 clear all;
-kstart = 10;
-kend = 1000;
 
-x1 = zeros(kend, 1);
-x2 = zeros(kend, 1);
-y = zeros(kend, 1);
-u = zeros(kend, 1);
-
-step_length = 50;
-u_value = 0;
-for i=1:kend
-    if mod(i, step_length) == 0
-        u_value = -1 + 2*rand(1);
-    end
-    u(i) = u_value;
-    
-end
+save_figure=true;
+step_length = 80;
+samples = 3000;
+train_rng_seed = 43;
+valid_rng_seed = 4;
 
 
-for k=kstart:kend
-    [y_iter, x1_iter, x2_iter] = simulation_object(x1(k-1), x2(k-1), u(k-3));
-    x1(k) = x1_iter;
-    x2(k) = x2_iter;
-    y(k) = y_iter;
+[y_train, u_train] = generate_dataset(step_length, samples, train_rng_seed, true);
+[y_val, u_val] = generate_dataset(step_length, samples, valid_rng_seed, true);
+
+length(y_val)
+
+figure;
+plot(y_train);
+
+grid on;
+grid(gca, 'minor');
+xlabel('k', 'fontsize', 14, 'Interpreter', 'latex');
+ylabel('y', 'fontsize', 14, 'Interpreter', 'latex');
+
+% Set figure size and position
+x0 = 10;
+y0 = 10;
+width = 1280;
+height = 720;
+set(gcf, 'position', [x0, y0, width, height]);
+
+if save_figure
+    exportgraphics(gcf, "images/zad1_train_y.pdf", 'ContentType', 'vector');
 end
 
 figure;
-stairs(y);
+plot(u_train);
+
+grid on;
+grid(gca, 'minor');
+xlabel('k', 'fontsize', 14, 'Interpreter', 'latex');
+ylabel('u', 'fontsize', 14, 'Interpreter', 'latex');
+
+% Set figure size and position
+x0 = 10;
+y0 = 10;
+width = 1280;
+height = 720;
+set(gcf, 'position', [x0, y0, width, height]);
+
+if save_figure
+    exportgraphics(gcf, "images/zad1_train_u.pdf", 'ContentType', 'vector');
+end
+
+figure;
+plot(y_val);
+
+grid on;
+grid(gca, 'minor');
+xlabel('k', 'fontsize', 14, 'Interpreter', 'latex');
+ylabel('y', 'fontsize', 14, 'Interpreter', 'latex');
+
+% Set figure size and position
+x0 = 10;
+y0 = 10;
+width = 1280;
+height = 720;
+set(gcf, 'position', [x0, y0, width, height]);
+
+if save_figure
+    exportgraphics(gcf, "images/zad1_val_y.pdf", 'ContentType', 'vector');
+end
+
+figure;
+plot(u_val);
+
+grid on;
+grid(gca, 'minor');
+xlabel('k', 'fontsize', 14, 'Interpreter', 'latex');
+ylabel('u', 'fontsize', 14, 'Interpreter', 'latex');
+
+% Set figure size and position
+x0 = 10;
+y0 = 10;
+width = 1280;
+height = 720;
+set(gcf, 'position', [x0, y0, width, height]);
+
+if save_figure
+    exportgraphics(gcf, "images/zad1_val_u.pdf", 'ContentType', 'vector');
+end
+
+
+% Sample data
+data = [u_train y_train];
+
+% Define the format string for scientific notation and space as delimiter
+formatSpec = '%.6e %.6e\n';
+
+% Write to file
+fileID = fopen('dane.txt', 'w');
+fprintf(fileID, formatSpec, data');
+fclose(fileID);

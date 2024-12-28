@@ -1,7 +1,6 @@
 clear all;
 
-
-
+save_figure=true;
 kstart = 10;
 kend = 10000;
 
@@ -29,3 +28,18 @@ end
 
 figure;
 plot(u_values, y_steady);
+grid on;
+grid(gca, 'minor');
+xlabel('u', 'fontsize', 14, 'Interpreter', 'latex');
+ylabel('y', 'fontsize', 14, 'Interpreter', 'latex');
+
+% Set figure size and position
+x0 = 10;
+y0 = 10;
+width = 1280;
+height = 720;
+set(gcf, 'position', [x0, y0, width, height]);
+
+if save_figure
+    exportgraphics(gcf, "images/zad1_static_characteristic.pdf", 'ContentType', 'vector');
+end
