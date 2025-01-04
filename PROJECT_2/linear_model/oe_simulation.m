@@ -1,4 +1,4 @@
-function [y_pred, error] = simulation(w, y, u, tau, na, nb)
+function [y_pred, error] = oe_simulation(w, y, u, tau, na, nb)
 
 kstart = max([nb, na]) + 1;
 samples = length(y);
