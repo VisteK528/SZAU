@@ -1,6 +1,6 @@
 clear all;
 
-save_figure = true;
+save_figure = false;
 dataset = load("../data/dataset.mat");
 u_train = dataset.u_train;
 y_train = dataset.y_train;
