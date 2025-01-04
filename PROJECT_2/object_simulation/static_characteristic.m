@@ -1,6 +1,6 @@
 clear all;
 
-save_figure=true;
+save_figure=false;
 kstart = 10;
 kend = 10000;
 
