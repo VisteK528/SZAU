@@ -9,7 +9,7 @@ function K = get_K(a1, a2, b1, b2, nb, tau, N, Nu, lambda)
             s(p) = s(p)+b(i);
         end
 
-        for i = 1:min([p,2])
+        for i = 1:min([p-1,2])
             s(p) = s(p)-a(i)*s(p-i);
         end
     end
