@@ -23,25 +23,32 @@ b1_gpc = -w(1); b2_gpc = -w(2); a1_gpc = w(3); a2_gpc = w(4);
 sigma_u = 0.001; sigma_y = 0.001;
 kstart = 10; kend = 1000;
 
-N = 10; Nu = 2; lambda = 30;
+N = 10; Nu = 2; lambda = 0.8;
 
 u_npl(1:kend) = 0;
 u_gpc(1:kend) = 0;
+u_no(1:kend) = 0;
 
 y_obj_npl(1:kend) = 0;
 y_obj_gpc(1:kend) = 0;
+y_obj_no(1:kend) = 0;
+
 y_set(1:kstart) = 0;
 y_set(kstart+1:260) = 0.6;
 y_set(261:510) = 0;
 y_set(511:760) = -1.7;
 y_set(761:kend) = -0.5;
+
 x1km1_npl=0; x2km1_npl=0;
 x1km1_gpc=0; x2km1_gpc=0;
+x1km1_no=0; x2km1_no=0;
+
 d_npl = zeros(1,kend);
 d_gpc = zeros(1,kend);
 
 min_u = -1;
 max_u = 1;
+
 
 K_gpc = get_K(a1_gpc, a2_gpc, b1_gpc, b2_gpc, tau, nb, N, Nu, lambda);
 
@@ -49,6 +56,7 @@ for k = kstart:kend
 
     [y_obj_npl(k), x1km1_npl, x2km1_npl] = simulation_object(x1km1_npl, x2km1_npl, u_npl(k-3));
     [y_obj_gpc(k), x1km1_gpc, x2km1_gpc] = simulation_object(x1km1_gpc, x2km1_gpc, u_gpc(k-3));
+    [y_obj_no(k), x1km1_no, x2km1_no] = simulation_object(x1km1_no, x2km1_no, u_no(k-3));
 
     yk_model_npl = y_nn_model(y_obj_npl(k-1), y_obj_npl(k-2), u_npl(k-tau), u_npl(k-nb), w20, w2, w10, w1);
     yk_model_gpc = y_lin_model(w, y_obj_gpc(k-1), y_obj_gpc(k-2), u_gpc(k-tau), u_gpc(k-nb));
@@ -118,20 +126,28 @@ for k = kstart:kend
     u_npl(k) = min(max(u_npl(k), min_u), max_u);
     u_gpc(k) = delta_u_gpc + u_gpc(k-1);
     u_gpc(k) = min(max(u_gpc(k), min_u), max_u);
+
+    %NO
+    delta_u_no  = zeros(Nu,1);
+    options = optimset('Display', 'off');
+    du_opt_no = fmincon(@(delta_u_no) cost_function_no(delta_u_no, N, Nu, lambda, y_set, k, y_obj_no, u_no, tau, nb, w20, w2, w10, w1), ...
+                     delta_u_no, [], [], [], [], -2 * ones(Nu, 1), 2 * ones(Nu, 1), @(delta_u_no) control_constraints_no(delta_u_no, u_no, k, min_u, max_u), options);
+    u_no(k) = u_no(k-1) + du_opt_no(1);
 end
 
 E_npl = sum((y_set - y_obj_npl).^2)
 E_gpc = sum((y_set - y_obj_gpc).^2)
+E_no = sum((y_set - y_obj_no).^2)
 
 figure;
 stairs(y_obj_npl);
 hold on
-stairs(y_obj_gpc);
+stairs(y_obj_no);
 stairs(y_set);
 grid on;
 grid(gca, 'minor');
 xlabel('k', 'fontsize', 14);
-legend('Wyjscie, regulator NPL', 'Wyjscie, regulator GPC', 'Wartosc zadana');
+legend('Wyjscie, regulator NPL', 'Wyjscie, regulator NO', 'Wartosc zadana');
 x0 = 10;
 y0 = 10;
 width = 1280;
@@ -139,17 +155,17 @@ height = 720;
 set(gcf, 'position', [x0, y0, width, height]);
 
 if save_figure
-    exportgraphics(gcf, "../images/zad4_npl_gpc_y_lambda_0_8.pdf", 'ContentType', 'vector');
+    exportgraphics(gcf, "../images/zad_dod__npl_no_y.pdf", 'ContentType', 'vector');
 end
 
 figure;
 stairs(u_npl);
 hold on
-stairs(u_gpc);
+stairs(u_no);
 grid on;
 grid(gca, 'minor');
 xlabel('k', 'fontsize', 14);
-legend('Sygnal sterujacy, regulator NPL', 'Sygnal sterujacy, regulator GPC');
+legend('Sygnal sterujacy, regulator NPL', 'Sygnal sterujacy, regulator NO');
 x0 = 10;
 y0 = 10;
 width = 1280;
@@ -157,5 +173,5 @@ height = 720;
 set(gcf, 'position', [x0, y0, width, height]);
 
 if save_figure
-    exportgraphics(gcf, "../images/zad4_npl_gpc_u_lambda_0_8.pdf", 'ContentType', 'vector');
+    exportgraphics(gcf, "../images/zad_dod_npl_no_u.pdf", 'ContentType', 'vector');
 end
