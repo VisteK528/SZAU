@@ -34,5 +34,3 @@ function [t, h] = linear_tank_model_v2(tspan, h1_0, h2_0, h2_lin, Tp, Upp, FDpp,
     h(h<0) = 0;
 
 end
-
-
