@@ -1,4 +1,6 @@
-function [t, h] = linear_tank_model(tspan, h1_0, h2_0, h2_lin, Tp, F1in_values, FD_values)
+function [t, h] = linear_tank_model(tspan, h1_0, h2_0, h2_lin, Tp, F1pp, FDpp, F1in_values, FD_values)
+    % F1 - funkcja przepływu zależna od czasu, np. @(t) 36.5
+    % FD - funkcja przepływu dodatkowego zależna od czasu, np. @(t) 7.5
 
     % Definiowanie stałej C1 i C2 oraz tau
     C1 = 0.75; 
@@ -7,9 +9,7 @@ function [t, h] = linear_tank_model(tspan, h1_0, h2_0, h2_lin, Tp, F1in_values, 
     
     alfa1 = 13;
     alfa2 = 12;
-
-    F1pp = F1in_values(1);
-    FDpp = FD_values(1);
+    
     tau = 120;
 
     h1_lin = h2_lin * (alfa2 / alfa1)^2;
